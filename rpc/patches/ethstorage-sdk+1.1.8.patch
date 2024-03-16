@@ -1,0 +1,39 @@
+diff --git a/node_modules/ethstorage-sdk/src/blobs.js b/node_modules/ethstorage-sdk/src/blobs.js
+index 7bdd0e8..b06ee04 100644
+--- a/node_modules/ethstorage-sdk/src/blobs.js
++++ b/node_modules/ethstorage-sdk/src/blobs.js
+@@ -5,6 +5,7 @@ const BlobTxFieldElementsPerBlob         = 4096;
+ const BLOB_SIZE = BlobTxBytesPerFieldElement * BlobTxFieldElementsPerBlob;
+ const BLOB_DATA_SIZE = 31 * BlobTxFieldElementsPerBlob;
+ 
++
+ function EncodeBlobs(data) {
+     const len = data.length;
+     if (len === 0) {
+diff --git a/node_modules/ethstorage-sdk/src/uploader.js b/node_modules/ethstorage-sdk/src/uploader.js
+index c54e1d0..9dace6e 100644
+--- a/node_modules/ethstorage-sdk/src/uploader.js
++++ b/node_modules/ethstorage-sdk/src/uploader.js
+@@ -65,6 +65,8 @@ function fakeExponential(factor, numerator, denominator) {
+     return output / denominator;
+ }
+ 
++let loaded = false
++
+ class BlobUploader {
+     #jsonRpc;
+     #privateKey;
+@@ -78,8 +80,11 @@ class BlobUploader {
+         this.#provider = new ethers.JsonRpcProvider(rpc);
+         this.#wallet = new ethers.Wallet(this.#privateKey, this.#provider);
+ 
+-        const SETUP_FILE_PATH = resolve(__dirname, "lib", "trusted_setup.txt");
+-        loadTrustedSetup(SETUP_FILE_PATH);
++        if (!loaded) {
++            const SETUP_FILE_PATH = resolve(__dirname, "lib", "trusted_setup.txt");
++            loadTrustedSetup(SETUP_FILE_PATH);
++            loaded = true
++        }
+     }
+ 
+     async sendRpcCall(method, parameters) {

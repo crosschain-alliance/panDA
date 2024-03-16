@@ -130,7 +130,7 @@ fastify.post('/v1', async (_request, _reply) => {
     for (const { height, name, namespace, hashBlock, transactionIndex } of params[2]) {
       if (name === 'celestia') {
         responses.push(
-          await celestiaController.getProof({
+          celestiaController.getProof({
             height,
             namespace,
             verifyOn
@@ -139,7 +139,7 @@ fastify.post('/v1', async (_request, _reply) => {
       }
       if (name === 'ethereum') {
         responses.push(
-          await ethereumController.getProof({
+          aethereumController.getProof({
             height,
             verifyOn
           })
@@ -147,7 +147,7 @@ fastify.post('/v1', async (_request, _reply) => {
       }
       if (name === 'ethereum') {
         responses.push(
-          await availController.getProof({
+          availController.getProof({
             hashBlock,
             transactionIndex,
             verifyOn
@@ -159,7 +159,10 @@ fastify.post('/v1', async (_request, _reply) => {
     _reply.send({
       id: _request.body.id,
       jsonrpc: '2.0',
-      result: responses
+      result: (await Promise.all(responses)).map((_res, _index) => ({
+        name: params[1][_index].name,
+        data: _res
+      }))
     })
     return
   }

@@ -1,0 +1,7 @@
+//const blockNumber = 1;
+//const IPA_Sepolia_4844: address("0x0");
+//const RESULT_STORAGE_SLOT = 1;
+
+const storage: Storage = getStorage(blockNumber, IPA_Sepolia_4844);
+const slotValue: CircuitValue256 = storage.slot(RESULT_STORAGE_SLOT);
+checkEqual(slotValue, constant(1))

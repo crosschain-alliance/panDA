@@ -12,6 +12,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@polkadot/api": "^10.4.1",
+    "@polkadot/keyring": "^12.2.1",
     "axios": "^1.6.7",
     "c-kzg": "^2.1.2",
     "class-transformer": "^0.5.1",

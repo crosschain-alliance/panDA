@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import Fastify from 'fastify'
 import { sepolia, gnosisChiado } from 'viem/chains'
 
+import AvailController from './controllers/AvailController.js'
 import CelestiaController from './controllers/CelestiaController.js'
 import EthereumController from './controllers/EthereumController.js'
 
@@ -23,6 +24,10 @@ const ethereumController = new EthereumController({
   chain: sepolia,
   privateKey: process.env.ETHEREUM_PRIVATE_KEY,
   rpcUrl: process.env.ETHEREUM_RPC_URL
+})
+const availController = new AvailController({
+  mnemonic: process.env.AVAIL_MNEMONIC,
+  rpcUrl: process.env.AVAIL_RPC_URL
 })
 
 const gnosisController = new EthereumController({
@@ -99,6 +104,13 @@ fastify.post('/v1', async (_request, _reply) => {
             })
           )
         }
+        if (name === 'avail') {
+          responses.push(
+            await availController.submitData({
+              data
+            })
+          )
+        }
       }
     }
 
@@ -111,8 +123,9 @@ fastify.post('/v1', async (_request, _reply) => {
   }
 
   if (_request.body.method === 'panda.getProof') {
-    for (const { height, name, namespace, verifyOn } of params[1]) {
-      /*if (name === 'celestia') {
+    const verifyOn = params[1]
+    for (const { height, name, namespace, hashBlock, transactionIndex } of params[2]) {
+      if (name === 'celestia') {
         responses.push(
           await celestiaController.getProof({
             height,
@@ -120,11 +133,20 @@ fastify.post('/v1', async (_request, _reply) => {
             verifyOn
           })
         )
-      }*/
+      }
       if (name === 'ethereum') {
         responses.push(
           await ethereumController.getProof({
             height,
+            verifyOn
+          })
+        )
+      }
+      if (name === 'ethereum') {
+        responses.push(
+          await availController.getProof({
+            hashBlock,
+            transactionIndex,
             verifyOn
           })
         )

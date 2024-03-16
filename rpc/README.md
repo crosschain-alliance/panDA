@@ -1,10 +1,11 @@
 # RPC
 
+The main Disperser Service method:
 
 ```json
 {
     "jsonrpc": "2.0",
-    "method": "panda.submitBlob",
+    "method": "ds_submitData",
     "params": [
         {
             "data": "aGVsbG8gd29ybGQh",
@@ -26,10 +27,13 @@
 ```
 
 
+The main Inclusion Proofs Collection Service method:
+
+
 ```json
 {
     "jsonrpc": "2.0",
-    "method": "panda.getProof",
+    "method": "ipcs_getProofs",
     "params": [
         {
             "name": "celestia",

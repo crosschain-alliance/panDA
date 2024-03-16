@@ -12,6 +12,8 @@ const App = () => {
     gnosis: false
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isVerifying, setIsVerifying] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
   const [status, setStatus] = useState({
     avail: false,
     celestia: false,
@@ -53,6 +55,9 @@ const App = () => {
         method: 'ds_submitData',
         params: [Buffer.from(data).toString('base64'), das]
       })
+      setIsSubmitting(false)
+      setSubmitted(true)
+      setIsVerifying(true)
 
       const proofsData = response.result.map(({ name, data }) => {
         const res = { name }
@@ -77,19 +82,26 @@ const App = () => {
         }
 
         if (res.result.length === das.length) break
-        await sleep(1000)
+        await sleep(500)
       }
     } catch (_err) {
       console.error(_err)
     } finally {
       setIsSubmitting(false)
+      setIsVerifying(false)
     }
   }, [data, selectedDas])
 
   const hasSelectedAtLeastOneDa = useMemo(() => Object.values(selectedDas).includes(true), [selectedDas])
   const submitDisabled = useMemo(
-    () => !hasSelectedAtLeastOneDa || isSubmitting,
-    [hasSelectedAtLeastOneDa, isSubmitting]
+    () => !hasSelectedAtLeastOneDa || isSubmitting || submitted,
+    [hasSelectedAtLeastOneDa, isSubmitting, submitted]
+  )
+
+  const completed = useMemo(
+    () =>
+      Object.values(status).filter((_val) => _val).length === Object.values(selectedDas).filter((_val) => _val).length,
+    [status, selectedDas]
   )
 
   return (
@@ -97,7 +109,7 @@ const App = () => {
       <nav className="bg-white p-4">
         <div className="mx-auto flex justify-center items-center">
           <div className="flex items-center justify-center">
-            <img src="./favicon.ico" width={64} height={64} alt="logo" />
+            <img src="./favicon.ico" width={72} height={72} alt="logo" />
           </div>
         </div>
       </nav>
@@ -106,6 +118,7 @@ const App = () => {
           <input
             className={`p-4 border border-gray-200 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full`}
             value={data}
+            placeholder="Data to submit"
             onChange={(_e) => setData(_e.target.value)}
           />
           <div className="flex justify-between mt-4">
@@ -203,61 +216,103 @@ const App = () => {
               onClick={onSubmit}
               disabled={submitDisabled}
             >
-              {isSubmitting ? <div className="spinner" /> : 'Submit'}
+              {isSubmitting ? <div className="spinner" /> : submitted ? 'Submitted' : 'Submit'}
             </button>
           </div>
 
-          {hasSelectedAtLeastOneDa && (
-            <div className="border border-gray-200 mt-16 rounded-lg">
-              <div className="px-4 py-2 flex">
-                <div className="flex flex-col justify-center items-center">
-                  <img src="./assets/png/eth.png" width={24} height={24} alt="eth" />
-                  <span className="mt-2 text-sm">Ethereum</span>
-                </div>
-                <div className="flex flex-col ml-8 justify-between w-full">
-                  <div className="flex h-full w-full">
-                    {selectedDas.ethereum && (
-                      <div
-                        className={`border border-gray-200 ${
-                          status.ethereum ? 'bg-green-300' : ''
-                        } rounded mr-2 w-full text-xs flex items-center justify-center`}
-                      >
-                        Local (EIP-4844)
-                      </div>
-                    )}
-                    {selectedDas.celestia && (
-                      <div
-                        className={`border border-gray-200 ${
-                          status.celestia ? 'bg-green-300' : ''
-                        } rounded mr-2 w-full text-xs flex items-center justify-center`}
-                      >
-                        Celestia
-                      </div>
-                    )}
-                    {selectedDas.avail && (
-                      <div
-                        className={`border border-gray-200 ${
-                          status.avail ? 'bg-green-300' : ''
-                        } rounded mr-2 w-full text-xs flex items-center justify-center`}
-                      >
-                        Avail
-                      </div>
-                    )}
-                    {selectedDas.gnosis && (
-                      <div
-                        className={`border border-gray-200 ${
-                          status.gnosis ? 'bg-green-300' : ''
-                        } rounded mr-2 w-full text-xs flex items-center justify-center`}
-                      >
-                        Gnosis (EIP-4844)
-                      </div>
-                    )}
+          {hasSelectedAtLeastOneDa && submitted && (
+            <React.Fragment>
+              <div className="border border-gray-200 mt-16 rounded-lg">
+                <div className={`px-2 py-5 flex ${completed ? ' bg-green-100' : ''} rounded-t-lg`}>
+                  <div className="flex flex-col justify-center items-center w-24">
+                    <img src="./assets/png/eth.png" width={24} height={24} alt="eth" />
+                    <span className="mt-2 text-sm">Ethereum</span>
+                  </div>
+                  <div className="flex flex-col ml-8 justify-between w-full">
+                    <div className="flex h-full w-full">
+                      {selectedDas.ethereum && (
+                        <div
+                          className={`border border-gray-200 ${
+                            status.ethereum ? 'bg-green-300' : ''
+                          } rounded mr-2 w-full text-xs flex items-center justify-center`}
+                        >
+                          Local (EIP-4844)
+                        </div>
+                      )}
+                      {selectedDas.celestia && (
+                        <div
+                          className={`border border-gray-200 ${
+                            status.celestia ? 'bg-green-300' : ''
+                          } rounded mr-2 w-full text-xs flex items-center justify-center`}
+                        >
+                          Celestia
+                        </div>
+                      )}
+                      {selectedDas.avail && (
+                        <div
+                          className={`border border-gray-200 ${
+                            status.avail ? 'bg-green-300' : ''
+                          } rounded mr-2 w-full text-xs flex items-center justify-center`}
+                        >
+                          Avail
+                        </div>
+                      )}
+                      {selectedDas.gnosis && (
+                        <div
+                          className={`border border-gray-200 ${
+                            status.gnosis ? 'bg-green-300' : ''
+                          } rounded mr-2 w-full text-xs flex items-center justify-center`}
+                        >
+                          Gnosis (EIP-4844)
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
+
+                {selectedDas.gnosis && (
+                  <div className="px-2 py-5 flex border-t border-gray-200">
+                    <div className="flex flex-col justify-center items-center w-24">
+                      <img src="./assets/png/gnosis.png" width={34} height={34} alt="gnosis" />
+                      <span className="mt-2 text-sm">Gnosis</span>
+                    </div>
+                    <div className="flex flex-col ml-8 justify-between w-full">
+                      <div className="flex h-full w-full">
+                        {selectedDas.ethereum && (
+                          <React.Fragment>
+                            <div
+                              className={`border border-gray-200 ${
+                                status.gnosis ? 'bg-green-300' : ''
+                              }  rounded mr-2 w-full text-xs flex items-center justify-center`}
+                            >
+                              Local (EIP-4844)
+                            </div>
+                            <div
+                              className={`border border-gray-200 rounded mr-2 w-full text-xs flex items-center justify-center`}
+                            >
+                              Celestia
+                            </div>
+                            <div
+                              className={`border border-gray-200 rounded mr-2 w-full text-xs flex items-center justify-center`}
+                            >
+                              Avail
+                            </div>
+                            <div
+                              className={`border border-gray-200 rounded mr-2 w-full text-xs flex items-center justify-center`}
+                            >
+                              Ethereum (EIP-4844)
+                            </div>
+                          </React.Fragment>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            </React.Fragment>
           )}
         </div>
+        {isVerifying && !completed && <div className="loading-bar rounded-lg mt-12 border border-gray-200" />}
       </div>
     </React.Fragment>
   )

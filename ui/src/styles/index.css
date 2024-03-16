@@ -27,3 +27,16 @@ html {
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
 }
+
+@keyframes slide {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.loading-bar {
+  width: 100%;
+  height: 10px;
+  background: linear-gradient(to left, #ffffff 25%, #A855F7 50%, #ffffff 75%) repeat-x;
+  background-size: 200% 100%;
+  animation: slide 5s linear infinite;
+}

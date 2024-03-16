@@ -71,7 +71,7 @@ fastify.post('/v1', async (_request, _reply) => {
   const responses = []
   const params = _request.body.params
 
-  if (_request.body.method === 'panda.submitBlob') {
+  if (_request.body.method === 'ds_submitBlob') {
     for (const { data, das } of params) {
       for (const { name, namespace, address } of das) {
         if (name === 'celestia') {
@@ -122,7 +122,7 @@ fastify.post('/v1', async (_request, _reply) => {
     return
   }
 
-  if (_request.body.method === 'panda.getProof') {
+  if (_request.body.method === 'ipcs_getProofs') {
     const verifyOn = params[1]
     for (const { height, name, namespace, hashBlock, transactionIndex } of params[2]) {
       if (name === 'celestia') {

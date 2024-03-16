@@ -86,7 +86,12 @@ class CelestiaController {
       }
     }
 
-    return response
+    return [
+      {
+        type: 'blobstreamx',
+        raw: response
+      }
+    ]
   }
 
   async submitBlob({ namespace, data } = {}) {

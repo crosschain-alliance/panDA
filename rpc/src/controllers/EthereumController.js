@@ -22,7 +22,12 @@ class EthereumController {
       const proof = computeBlobKzgProof(blob, commitment)
       if (!verifyBlobKzgProofBatch([blob], [commitment], [proof])) throw new Error('Proof verification failed')
       // TODO: encode abi (bytes32 blobHash, uint256 x, uint256 y, bytes1[48] memory commitment, bytes1[48] memory proof)
-      return '0x'
+      return [
+        {
+          type: 'kzgproof',
+          raw: '0x'
+        }
+      ]
     }
   }
 

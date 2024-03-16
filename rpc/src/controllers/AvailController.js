@@ -12,7 +12,7 @@ class AvailController {
   }
 
   async getProof({ hashBlock, verifyOn, transactionIndex }) {
-    if (verifyOn === 'ethereum') {
+    /*if (verifyOn === 'ethereum') {
       const proof = await this.client.rpc.kate.queryDataProof(transactionIndex, hashBlock)
       // TODO: get block number by hashBlock
       return encodeAbiParameters(
@@ -21,17 +21,23 @@ class AvailController {
            0, proof.proof, proof.numberOfLeaves, proof.leaf_index, proof.leaf
         ]
       )
-    }
+    }*/
+    return [
+      {
+        type: 'standard',
+        raw: '0x'
+      }
+    ]
   }
 
   async submitData({ data }) {
-    const keyring = new Keyring({ type: 'sr25519' })
+    /*const keyring = new Keyring({ type: 'sr25519' })
     const account = keyring.addFromMnemonic(this.mnemonic)
     let submit = await this.client.tx.dataAvailability.submitData(data)
     let result = await sendTx(this.client, account, submit)
     const txIndex = JSON.parse(result.events[0].phase).applyExtrinsic
     const blockHash = result.status.asInBlock
-    console.log(`Transaction: ${result.txHash}. Block hash: ${blockHash}. Transaction index: ${txIndex}.`)
+    console.log(`Transaction: ${result.txHash}. Block hash: ${blockHash}. Transaction index: ${txIndex}.`)*/
   }
 }
 

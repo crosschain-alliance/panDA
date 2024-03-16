@@ -38,6 +38,7 @@ class AvailController {
     const txIndex = JSON.parse(result.events[0].phase).applyExtrinsic
     const blockHash = result.status.asInBlock
     console.log(`Transaction: ${result.txHash}. Block hash: ${blockHash}. Transaction index: ${txIndex}.`)*/
+    return '0x'
   }
 }
 

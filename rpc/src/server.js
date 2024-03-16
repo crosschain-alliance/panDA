@@ -47,7 +47,7 @@ fastify.route({
     reply
       .code(204)
       .header('Content-Length', '0')
-      .header('Access-Control-Allow-Origin', 'your server')
+      .header('Access-Control-Allow-Origin', 'http://localhost:3001')
       .header('Access-Control-Allow-Credentials', true)
       .header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
       .send()
@@ -55,7 +55,7 @@ fastify.route({
 })
 
 fastify.addHook('onRequest', function (request, reply, next) {
-  reply.header('Access-Control-Allow-Origin', 'your server')
+  reply.header('Access-Control-Allow-Origin', 'http://localhost:3001')
   reply.header('Access-Control-Allow-Credentials', true)
   next()
 })
@@ -71,12 +71,12 @@ fastify.post('/v1', async (_request, _reply) => {
   const responses = []
   const params = _request.body.params
 
-  if (_request.body.method === 'ds_submitBlob') {
-    for (const { data, das } of params) {
-      for (const { name, namespace, address } of das) {
+  if (_request.body.method === 'ds_submitData') {
+      const data = params[0]
+      for (const { name, namespace, address } of params[1]) {
         if (name === 'celestia') {
           responses.push(
-            await celestiaController.submitBlob({
+            celestiaController.submitBlob({
               data,
               namespace
             })
@@ -84,9 +84,9 @@ fastify.post('/v1', async (_request, _reply) => {
         }
         if (name === 'ethereum') {
           responses.push(
-            await ethereumController.submitBlob({
+            ethereumController.submitBlob({
               address,
-              content: data,
+              blob: data,
               maxFeePerGas: 180e9,
               maxPriorityFeePerGas: 1e9,
               maxFeePerBlobGas: 25e9
@@ -95,9 +95,9 @@ fastify.post('/v1', async (_request, _reply) => {
         }
         if (name === 'gnosis') {
           responses.push(
-            await gnosisController.submitBlob({
+            gnosisController.submitBlob({
               address,
-              content: data,
+              blob: data,
               maxFeePerGas: 1e9,
               maxPriorityFeePerGas: 1e9,
               maxFeePerBlobGas: 1e9
@@ -106,18 +106,21 @@ fastify.post('/v1', async (_request, _reply) => {
         }
         if (name === 'avail') {
           responses.push(
-            await availController.submitData({
+            availController.submitData({
               data
             })
           )
         }
       }
-    }
+    
 
     _reply.send({
       id: _request.body.id,
       jsonrpc: '2.0',
-      result: responses
+      result: (await Promise.all(responses)).map((_res, _index) => ({
+        name: params[1][_index].name,
+        data: _res
+      }))
     })
     return
   }

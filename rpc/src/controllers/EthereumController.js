@@ -31,7 +31,7 @@ class EthereumController {
     }
   }
 
-  async submitBlob({ address, content, data = '0x', value = 0, maxFeePerGas, maxPriorityFeePerGas, maxFeePerBlobGas }) {
+  async submitBlob({ address, blob, data = '0x', value = 0, maxFeePerGas, maxPriorityFeePerGas, maxFeePerBlobGas }) {
     const tx = {
       to: address,
       data,
@@ -41,10 +41,8 @@ class EthereumController {
       maxPriorityFeePerGas,
       maxFeePerBlobGas
     }
-
-    const buffer = Buffer.from(content, 'base64')
+    const buffer = Buffer.from(blob, 'base64')
     const blobs = EncodeBlobs(buffer)
-
     return await this.uploader.sendTx(tx, blobs)
   }
 }

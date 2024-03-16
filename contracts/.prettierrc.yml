@@ -1,0 +1,13 @@
+bracketSpacing: true
+printWidth: 120
+proseWrap: "always"
+singleQuote: false
+tabWidth: 2
+trailingComma: "all"
+semi: false
+
+overrides:
+  - files: "*.sol"
+    options:
+      tabWidth: 4
+  - files: "*.ts"

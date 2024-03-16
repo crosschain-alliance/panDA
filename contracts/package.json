@@ -1,0 +1,33 @@
+{
+  "name": "contracts",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "lint:sol": "solhint --max-warnings 0 \"contracts/**/*.sol\"",
+    "lint:ts": "eslint --ignore-path ./.eslintignore --ext .js,.ts .",
+    "format": "prettier --write \"**/*.{js,json,md,sol,ts,yml}\"",
+    "test": "npx hardhat test"
+  },
+  "author": "allemanfredi",
+  "license": "MIT",
+  "devDependencies": {
+    "blobstream-contracts": "https://github.com/celestiaorg/blobstream-contracts.git",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.4",
+    "@openzeppelin/contracts": "^5.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
+    "@typescript-eslint/parser": "^5.44.0",
+    "dotenv": "^16.4.1",
+    "ethers": "^6.10.0",
+    "hardhat": "^2.19.5",
+    "patch-package": "^8.0.0",
+    "prettier": "^2.8.7",
+    "prettier-plugin-solidity": "^1.0.0",
+    "solhint": "^3.3.7",
+    "solhint-plugin-prettier": "^0.0.5",
+    "solidity-coverage": "^0.8.2"
+  }
+}

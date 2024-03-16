@@ -15,8 +15,10 @@ contract Adapter4844 is IAdapter {
     error PointYTooLarge();
 
     function verify(bytes calldata data) external view returns (bool) {
-        (bytes32 blobHash, uint256 x, uint256 y, bytes1[48] memory commitment, bytes1[48] memory proof) = abi
-            .decode(data, (bytes32, uint256, uint256, bytes1[48], bytes1[48]));
+        (bytes32 blobHash, uint256 x, uint256 y, bytes1[48] memory commitment, bytes1[48] memory proof) = abi.decode(
+            data,
+            (bytes32, uint256, uint256, bytes1[48], bytes1[48])
+        );
 
         if (x >= BLS_MODULUS) revert PointXTooLarge();
         if (y >= BLS_MODULUS) revert PointYTooLarge();

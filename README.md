@@ -2,7 +2,7 @@
 
 panDA is an abstraction layer for Data Availability (DA) layers, built with additive security in mind. By using it, Layer 2 solutions and rollup ecosystems can scale efficiently and securely, leveraging different DAs as if they were one.
 
-The fragmentation and diverse trust assumptions of the cross-chain bridging landscape has affected our industry greatly, introducing systemic risks and vendor lock-ins that in the scalability context can be avoided - panDA helps achieving that from the start, ultimately enabling a future proof L2 ecosystem.
+The cross-chain ecosystem has suffered greatly due to its reliance on non-adaptable solutions that were built without redundancy in mind and with lock-in to specific vendors - panDA helps addressing that from the start, ultimately enabling a future proof L2 ecosystem.
 
 **Key Features and Advantages:**
 
